@@ -10,11 +10,16 @@
   <form action="" class="page__section">
     <h1 class="page__title">Реєстрація</h1>
     <div class="form__item">
-        Test
+        {{>field action="signupForm.change" label="Ел.адреса" type="email" name="email" placeholder="Ваш e-mail"}}
         <span name="email" class="form__error"></span>
     </div>
 
-    <button class="button" type="button">Зареєструватися</button>
+    <div class="form__item">
+        {{>field-password action="signupForm.change" label="Пароль" type="password" name="password" placeholder="Введіть пароль"}}
+        <span name="password" class="form__error"></span> 
+    </div>
+
+    <button onclick="signupForm.submit()" class="button" type="button">Зареєструватися</button>
     <span class="alert alert--error">Внимание, ошибка</span>
   </form>
 </div>
