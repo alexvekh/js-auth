@@ -1,4 +1,6 @@
-class SighupForm {
+import { Form } from '../../script/form'
+
+class SighupForm extends Form {
   static value = {}
 
   static validate = (name, value) => {
