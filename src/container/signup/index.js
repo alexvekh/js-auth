@@ -1,6 +1,6 @@
 import { Form, REG_EXP_EMAIL, REG_EXP_PASSWORD } from '../../script/form'
 
-class SighupForm extends Form {
+class SignupForm extends Form {
   FIELD_NAME = {
     EMAIL: 'email',
     PASSWORD: 'password',
@@ -54,19 +54,50 @@ class SighupForm extends Form {
 
     if (name === this.FIELD_NAME.IS_CONFIRM) {
       if (Boolean(value) !== true) {
-        return this.FIELD_ERROR.IS_CONFIRM
+        return this.FIELD_ERROR.NOT_CONFIRM
       }
     }
-
-    return true
   }
 
-  submit = () => {
-    console.log(this.value)
+  submit = async () => {
+    if (this.disabled === true) {
+      this.validateAll()
+    } else {
+      console.log(this.value)
+      this.setAlert('progress', 'Завантаження...')
+
+      try {
+        const res = await fetch('/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: this.convertData(),
+        })
+
+        const data = await res.json()
+
+        if (res.ok) {
+          this.setAlert('success', data.message)
+        } else {
+          this.setAlert('error', error.message)
+        }
+      } catch (error) {
+        this.setAlert('error', error.message)
+      }
+    }
+  }
+
+  convertData = () => {
+    return JSON.stringify({
+      [this.FIELD_NAME.EMAIL]: this.value[this.FIELD_NAME.EMAIL],
+      [this.FIELD_NAME.PASSWORD]: this.value[this.FIELD_NAME.PASSWORD],
+      [this.FIELD_NAME.ROLE]: this.value[this.FIELD_NAME.ROLE],
+    })
   }
 }
 
-window.signupForm = new SighupForm()
+window.signupForm = new SignupForm()
 
 // other way: (id="")
 // document.addEventListener("DOMContentLoaded", () => {})

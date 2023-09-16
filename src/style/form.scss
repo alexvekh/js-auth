@@ -69,3 +69,9 @@
 		display: none;
 	}
 }
+
+.validation {
+	&--active {
+		border-color: s.color(red) !important;
+	}
+}
