@@ -29,7 +29,7 @@ class User {
     console.log(this.#list)
   }
 
-  static detByEmail(email) {
+  static getByEmail(email) {
     return this.#list.find((user) => user.email === email) || null
   }
 }
