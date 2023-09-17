@@ -27,7 +27,7 @@ router.get('/signup', function (req, res) {
     component: ['back-button', 'field', 'field-password', 'field-checkbox', 'field-select'],
 
     // вказуємо назву сторінки
-    title: 'Sugn Up Page',
+    title: 'SignUp Page',
     // ... сюди можна далі продовжувати додавати потрібні технічні дані, які будуть використовуватися в layout
 
     // вказуємо дані,
@@ -60,6 +60,13 @@ router.post('/signup', function (req, res) {
   }
 
   try {
+    const user = User.getByEmail(email)
+    if (user) {
+      return res.status(400).json({
+        message: 'Помилка. Такий користувач вже існує',
+      })
+    }
+
     User.create({ email, password, role })
     return res.status(200).json({
       message: 'Користувач успішно зареєстрований',
@@ -67,6 +74,53 @@ router.post('/signup', function (req, res) {
   } catch (err) {
     return res.status(400).json({
       message: 'Помилка створення користувача',
+    })
+  }
+})
+
+// =====================================================
+// ↙️ тут вводимо шлях (PATH) до сторінки
+router.get('/recovery', function (req, res) {
+  // res.render генерує нам HTML сторінку
+
+  // ↙️ cюди вводимо назву файлу з сontainer
+  res.render('recovery', {
+    // вказуємо назву контейнера
+    name: 'recovery',
+    // вказуємо назву компонентів
+    component: ['back-button', 'field'],
+
+    // вказуємо назву сторінки
+    title: 'Recovery Page',
+    // ... сюди можна далі продовжувати додавати потрібні технічні дані, які будуть використовуватися в layout
+
+    // вказуємо дані,
+    data: {},
+  })
+  // ↑↑ сюди вводимо JSON дані
+})
+
+router.post('/recovery', function (req, res) {
+  const { email } = req.body
+
+  console.log(email)
+
+  if (!email) {
+    return res.status(400).json({
+      message: "Помилка. Обов'язкові поля відсутні",
+    })
+  }
+
+  try {
+    const user = User.getByEmail(email)
+    if (!user) {
+      return res.status(400).json({
+        message: 'Користувач з таким email не існує',
+      })
+    }
+  } catch (err) {
+    return res.status(400).json({
+      message: err.message,
     })
   }
 })
