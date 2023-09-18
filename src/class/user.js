@@ -27,6 +27,7 @@ class User {
     const user = new User(data)
     this.#list.push(user)
     console.log(this.#list)
+    return user
   }
 
   static getByEmail(email) {
