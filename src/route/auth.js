@@ -72,6 +72,9 @@ router.post('/signup', function (req, res) {
     const newUser = User.create({ email, password, role })
     const session = Session.create(newUser)
 
+    //
+    Confirm.create(newUser.email)
+
     return res.status(200).json({
       message: 'Користувач успішно зареєстрований',
       session,
@@ -187,9 +190,11 @@ router.post('/recovery-confirm', function (req, res) {
     user.password = password
 
     console.log(user)
+    const session = Session.create(user)
 
     return res.status(200).json({
       message: 'Пароль змінено',
+      session,
     })
   } catch (err) {
     return res.status(400).json({
@@ -197,5 +202,68 @@ router.post('/recovery-confirm', function (req, res) {
     })
   }
 })
+
+router.get('/signup-confirm', function (req, res) {
+  // res.render генерує нам HTML сторінку
+
+  // ↙️ cюди вводимо назву файлу з сontainer
+  res.render('signup-confirm', {
+    // вказуємо назву контейнера
+    name: 'signup-confirm',
+    // вказуємо назву компонентів
+    component: ['back-button', 'field'],
+
+    // вказуємо назву сторінки
+    title: 'Signup confirm Page',
+    // ... сюди можна далі продовжувати додавати потрібні технічні дані, які будуть використовуватися в layout
+
+    // вказуємо дані,
+    data: {},
+  })
+  // ↑↑ сюди вводимо JSON дані
+})
+
+router.post('/signup-confirm', function (req, res) {
+  const { code, token } = req.body
+  if (!code || !token) {
+    return res.status(400).json({
+      message: "Помилка. Обов'язкові поля відсутні",
+    })
+  }
+
+  try {
+    const session = Session.get(token)
+
+    if (!session) {
+      return res.status(400).json({
+        message: 'Помилка. Ви не увішли в аккаунт',
+      })
+    }
+    const email = Confirm.getData(code)
+
+    if (!email) {
+      return res.status(400).json({
+        message: 'Код не існує',
+      })
+    }
+
+    if (email !== session.user.email) {
+      return res.status(400).json({
+        message: 'Код не дійсний',
+      })
+    }
+
+    const user = User.getByEmail(session.user.email)
+    user.isConfirm = true
+    session.user.isConfirm = true
+
+    return res.status(200).json({
+      message: 'Ви  підтвердили свою пошту',
+      session,
+    })
+  } catch (error) {}
+  console.log('Code & token:   ', code, token)
+})
+
 // Підключаємо роутер до бек-енду
 module.exports = router

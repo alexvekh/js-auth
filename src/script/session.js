@@ -26,3 +26,18 @@ export const loadSession = () => {
     window.session = null
   }
 }
+
+export const getTokenSession = () => {
+  try {
+    const session = JSON.parse(localStorage.getItem(SESSION_KEY)) || window.session
+
+    if (session) {
+      return session.token
+    } else {
+      return null
+    }
+  } catch (error) {
+    console.log(error)
+    return null
+  }
+}
