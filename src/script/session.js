@@ -29,13 +29,19 @@ export const loadSession = () => {
 
 export const getTokenSession = () => {
   try {
-    const session = JSON.parse(localStorage.getItem(SESSION_KEY)) || window.session
+    const session = getSession()
 
-    if (session) {
-      return session.token
-    } else {
-      return null
-    }
+    return session ? session.token : null
+  } catch (error) {
+    console.log(error)
+    return null
+  }
+}
+
+export const getSession = () => {
+  try {
+    const session = JSON.parse(localStorage.getItem(SESSION_KEY)) || window.session
+    return session || null
   } catch (error) {
     console.log(error)
     return null

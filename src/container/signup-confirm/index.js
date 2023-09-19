@@ -1,6 +1,6 @@
 import { Form } from '../../script/form'
 
-import { getTokenSession, saveSession } from '../../script/session'
+import { getTokenSession, getSession, saveSession } from '../../script/session'
 
 class SignupConfirmForm extends Form {
   FIELD_NAME = {
@@ -63,5 +63,22 @@ class SignupConfirmForm extends Form {
 
 window.signupConfirmForm = new SignupConfirmForm()
 
-// other way: (id="")
-// document.addEventListener("DOMContentLoaded", () => {})
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    if (window.session) {
+      if (window.session.user.isConfirm) {
+        location.assign('/')
+      }
+    } else {
+      location.assign('/') // ??
+    }
+  } catch (error) {}
+
+  document.querySelector('.link#renew').addEventListener('click', (e) => {
+    e.preventDefault()
+
+    const session = getSession()
+
+    location.assign(`/signup-confirm?renew=true&email=${session.user.email}`)
+  })
+})
