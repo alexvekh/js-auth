@@ -12,6 +12,21 @@ User.create({
   password: 123,
   role: 1,
 })
+User.create({
+  email: 'test2@mail.com',
+  password: 234,
+  role: 2,
+})
+User.create({
+  email: 'test33@mail.com',
+  password: 345,
+  role: 3,
+})
+User.create({
+  email: 'test444@mail.com',
+  password: 456,
+  role: 4,
+})
 
 // ================================================================
 
