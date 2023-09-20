@@ -13,6 +13,8 @@ class UserList extends List {
   loadData = async () => {
     this.updateStatus(this.STATE.LOADING)
 
+    //return null
+
     try {
       const res = await fetch('/user-list-data', {
         method: 'GET',
@@ -46,8 +48,24 @@ class UserList extends List {
     switch (this.status) {
       case this.STATE.LOADING:
         this.element.innerHTML = `
-        <span class="alert alert--progress">Loading...</span>
+        <div class="user">
+          <span class="user__title skeleton"></span>
+          <span class="user__sub skeleton"></span>
+        </div>
+        <div class="user">
+          <span class="user__title skeleton"></span>
+          <span class="user__sub skeleton"></span>
+        </div>
+        <div class="user">
+          <span class="user__title skeleton"></span>
+          <span class="user__sub skeleton"></span>
+        </div>
+        <div class="user">
+          <span class="user__title skeleton"></span>
+          <span class="user__sub skeleton"></span>
+        </div>
         `
+        // <span class="alert alert--progress">Loading...</span>
         break
 
       case this.STATE.SUCCESS:
@@ -62,7 +80,7 @@ class UserList extends List {
 
         break
       case this.STATE.ERROR:
-        this.element.innerHTML += `
+        this.element.innerHTML = `
           <span class="alert alert--error">${this.data.message}</span>
         `
         break
